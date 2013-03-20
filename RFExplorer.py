@@ -9,9 +9,8 @@ STOP = '#'+chr(0x04)+'CH'
 LCD_OFF = '#'+chr(0x04)+'L0'
 LCD_ON = '#'+chr(0x04)+'L1'
 
-#SHUTDOWN DOESN'T WORK
+#SHUTDOWN DOESN'T WORK RELIABLY
 SHUTDOWN = '#'+chr(0x04)+'CS'
-first_config = '#'+chr(32)+'C2-F:'+'0450000,'+'0512000,'+'-070,'+'-120'
 
 #from Thomas at http://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
 #Not sure if this is the best way of doing this.  We want the name to match SiLabs Driver
@@ -43,7 +42,9 @@ def list_serial_ports():
 class RFExplorer:
     """Instantiates an RFExplorer instance.
 
-        Must take an integer of the COM port list.
+        Must take an integer of the COM port list, not the index.
+        For example if the COM port that the RFE is attached to is displayed by
+        Windows as COM4, then provide the number 4 to the RFExplorer instance.
 
         Args:
             port: Integer of the COM port that the RF Explorer is attached to
@@ -248,7 +249,7 @@ class RFExplorer:
             ValueError: RFE_connection didn't initialize properly.
                         This means that the length of self.freq_dict is not 112 as it should be
         """
-        start = '0450000'
+        start = '04500000'
         end = '0512000'
         top = '-010'
         bottom = '-100'
@@ -270,23 +271,18 @@ class RFExplorer:
                     if one_result[i] > v:
                         final_result[i] = one_result[i]
         first_dict = self.compile_dictionary(final_result)
-        #CSVFile = self.make_csv(filename, final_dict)
         return first_dict
         
-    def sweep_set_B(self):
+    def quick_sweep(self, start,end,stop_sweep):
+        """ Set the sweep settings and gather data for a specified time
+            Args:
+                start: 7 digit entry of starting frequency for the sweep 
+                end: 7 digit entry of end frequency for the sweep
+                stop_sweep: length of time in seconds for the sweep repeat and compare
+            Returns:
+                value_dictionary to compare with other sweep data
         """
-        This calls the second set of data output that the RF dept likes to see.
-        Args:
-            self
-            filename: the name of the resulting CSV
-        Returns:
-            boolean: if everything went swimmingly
-        Raises:
-            ValueError: RFE_connection didn't initialize properly.
-                        This means that the length of self.freq_dict is not 112 as it should be
-        """
-        start = '0512000'
-        end = '0698000'
+        self.stop_please()
         top = '-010'
         bottom = '-100'
         sweep_settings = self.set_sweep_params(start,end,top,bottom)
@@ -296,29 +292,16 @@ class RFExplorer:
                 raise ValueError("RFE_connection didn't initialize properly")
         else:    
             raise ValueError("RFE didn't take the sweep_settings")
-        stop_sweep = time.time() + 30
-        #collect data points, convert them to int and save the highest data points
         final_result = self.collect_data()
+        stop_sweep = time.time() + stop_sweep
         while time.time() < stop_sweep:
             one_result = self.collect_data()
             if len(final_result) == len(one_result):
                 for i, v in enumerate(final_result):
                     if one_result[i] > v:
                         final_result[i] = one_result[i]
-        second_dict = self.compile_dictionary(final_result)
-        return second_dict
-        
-    def make_RF_guys_happy(self, filename):
-        print 'cleaning the serial port...'
-        self.stop_please()
-        first_dict = self.sweep_set_A()
-        print 'settle down now!'
-        self.stop_please()
-        print "how about another round of sweeps?"
-        second_dict = self.sweep_set_B()
-        final_dict = dict(first_dict, **second_dict)
-        success = self.make_csv(filename, final_dict)
-        return 'it worked!'
+        first_dict = self.compile_dictionary(final_result)
+        return first_dict
         
     def make_csv(self, filename, freq_dict):
         """
@@ -326,7 +309,7 @@ class RFExplorer:
         sorts the results dictionary and writes the file.
         Args: 
             filename: the name of the file that will be saved to the working directory
-        returns: 
+        Returns: 
             file: CSV file with filename of filename arg formatted correctly
         Raises:
             
