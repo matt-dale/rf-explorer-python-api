@@ -131,7 +131,7 @@ class RFExplorer:
             initSpan = initFreq_Step * initSweep_Steps
             initEndFreq = initStart_Freq + initSpan
             initCenterFreq = initStart_Freq + (initSpan/2)
-            print 'Span=%s, EndFreq=%s, CFreq=%s, StepFreq=%s' % (initSpan, initEndFreq, initCenterFreq, initFreq_Step)
+            #print 'Span=%s, EndFreq=%s, CFreq=%s, StepFreq=%s' % (initSpan, initEndFreq, initCenterFreq, initFreq_Step)
             freq_list = [str(initStart_Freq)]
             for freq in range(1, int(initSweep_Steps)):
                 #add a new list entry which is initFreq_Step greater than the previous list entry
@@ -185,15 +185,12 @@ class RFExplorer:
               
     def stop_please(self):
         self.ser.write(STOP)
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.ser.close()
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.ser.open()
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.ser.flushInput()
-        time.sleep(0.5)
-        self.ser.flush()
-        time.sleep(0.5)
         
     def set_sweep_params(self, start_freq, end_freq, amp_top, amp_bottom):
         """
@@ -236,44 +233,8 @@ class RFExplorer:
             return True
         except:
             raise ValueError("write to RFE failed")
-                
-    def sweep_set_A(self):
-        """
-        This calls the normal data output that the RF dept likes to see. Imports directly into IAS
-        Args:
-            self
-            filename: the name of the resulting CSV
-        Returns:
-            boolean: if everything went swimmingly
-        Raises:
-            ValueError: RFE_connection didn't initialize properly.
-                        This means that the length of self.freq_dict is not 112 as it should be
-        """
-        start = '04500000'
-        end = '0512000'
-        top = '-010'
-        bottom = '-100'
-        sweep_settings = self.set_sweep_params(start,end,top,bottom)
-        if sweep_settings == True:
-            freq_list = self.parse_C2_F_response()
-            if len(freq_list) != 112:
-                raise ValueError("RFE_connection didn't initialize properly")
-        else:    
-            raise ValueError("RFE didn't take the sweep_settings")
-#       #RF guys want this to be 3 minutes to sweep for 2-way radios.  This 30 sec time is used for debugging
-        stop_sweep = time.time() + 30
-        #collect data points, convert them to int and save the highest data points
-        final_result = self.collect_data()
-        while time.time() < stop_sweep:
-            one_result = self.collect_data()
-            if len(final_result) == len(one_result):
-                for i, v in enumerate(final_result):
-                    if one_result[i] > v:
-                        final_result[i] = one_result[i]
-        first_dict = self.compile_dictionary(final_result)
-        return first_dict
         
-    def quick_sweep(self, start,end,stop_sweep):
+    def quick_sweep(self, start,end):
         """ Set the sweep settings and gather data for a specified time
             Args:
                 start: 7 digit entry of starting frequency for the sweep 
@@ -293,13 +254,6 @@ class RFExplorer:
         else:    
             raise ValueError("RFE didn't take the sweep_settings")
         final_result = self.collect_data()
-        stop_sweep = time.time() + stop_sweep
-        while time.time() < stop_sweep:
-            one_result = self.collect_data()
-            if len(final_result) == len(one_result):
-                for i, v in enumerate(final_result):
-                    if one_result[i] > v:
-                        final_result[i] = one_result[i]
         first_dict = self.compile_dictionary(final_result)
         return first_dict
         
