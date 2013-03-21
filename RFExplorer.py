@@ -150,6 +150,7 @@ class RFExplorer:
         Raises:
             SerialException:None
             Used to break a while loop if all has gone to hell
+            ValueError: If the conversion of datapoints fails for a specific 
         """
         first = self.ser.readline()
         if not first.startswith('$S'):
@@ -168,16 +169,29 @@ class RFExplorer:
         result = "".join(result.splitlines())
         separated = result.split('=')
         final_results = []
-        for i in separated:
-            if (len(i) == 0) or i.startswith("$"):
-                continue
-            i = (int(i, 16)/2)*-1#convert to dBm
-            final_results.append(i)
-        #print 'Value list is %s long' % len(final_results)    
+        for dx, i in enumerate(separated):
+            if not (len(i) == 0) or i.startswith("$"):   
+                try: 
+                    i = (int(i, 16)/2)*-1#convert to dBm
+                except:
+                    #just take a guess here, hopefully something's not right in this area...
+                    prev = separated[dx-1]
+                    if (len(prev) == 0):
+                        prev = separated[dx-2]
+                    i = (int(prev[0:2],16)/2)*-1
+                final_results.append(i)
+            #print 'Value list is %s long' % len(final_results)    
         return final_results
             
     def compile_dictionary(self, values):
         freq_dict = {}
+        if len(values) != len(self.freq_list):
+            last = values[-1]
+            difference = len(self.freq_list) - len(values)
+            if difference > 0:
+                for i in range(difference):
+                    value = last
+                    values.append(value)
         for indx, freq in enumerate(self.freq_list):
             freq_dict[freq] = values[indx]
         return freq_dict
@@ -263,6 +277,7 @@ class RFExplorer:
         sorts the results dictionary and writes the file.
         Args: 
             filename: the name of the file that will be saved to the working directory
+            freq_dict: a dictionary of freq in kHz, dBm value pairs
         Returns: 
             file: CSV file with filename of filename arg formatted correctly
         Raises:
