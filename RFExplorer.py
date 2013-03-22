@@ -282,6 +282,46 @@ class RFExplorer:
         first_dict = self.compile_dictionary(final_result)
         return first_dict
         
+    def timed_sweep(self, start,end,stop):
+        """ Set the sweep settings and gather data for a specified time
+            Args:
+                start: 7 digit entry of starting frequency for the sweep 
+                end: 7 digit entry of end frequency for the sweep
+                stop: length of time in seconds for the sweep repeat and compare
+            Returns:
+                value_dictionary to compare with other sweep data
+        """
+        self.stop_please()
+        top = '-010'
+        bottom = '-100'
+        sweep_settings = self.set_sweep_params(start,end,top,bottom)
+        if sweep_settings == True:
+            freq_list = self.parse_C2_F_response()
+            if len(freq_list) != 112:
+                raise ValueError("RFE_connection didn't initialize properly")
+        else:    
+            raise ValueError("RFE didn't take the sweep_settings")
+        now = time.time()
+        stop_sweep = now+stop
+        collection = []
+        while time.time() < stop_sweep:
+            final_result = self.collect_data()
+            if final_result == None:
+        # We are going to try this again, for a few more times more times.
+                final_result = self.collect_data()
+                if final_result == None:
+                    final_result = self.collect_data()
+            if final_result == None:
+                raise ValueError('This set of frequencies is not 112 long.')
+            for indx, val in enumerate(final_result):
+                if indx in collection:
+                    if val > collection[indx]:
+                        collection.insert(indx,val)
+                else:
+                    collection.insert(indx,val)
+        first_dict = self.compile_dictionary(final_result)
+        return first_dict
+        
     def make_csv(self, filename, freq_dict):
         """
         creates the final CSV file by converting all Hz values to MHz
