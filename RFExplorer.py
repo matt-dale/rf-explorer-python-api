@@ -165,16 +165,32 @@ class RFExplorer:
         else:
             results = first
         #read one line for now
-        result = binascii.b2a_qp(results)
-        result = "".join(result.splitlines())
-        separated = result.split('=')
-        final_results = []
-        for i in separated:
-            if (len(i) == 0) or i.startswith("$"):
-                continue
-            i = (int(i, 16)/2)*-1#convert to dBm
-            final_results.append(i) 
-            #print 'Value list is %s long' % len(final_results)    
+        #we have to check for the weird readline() hex or ascii to see what's in the string
+        results = str(results).split('$S')[1]
+        if results.startswith('p'):#now we know we've got good data
+            results = results.split('p')[1]
+            separated = []
+            for i in results:
+                separated.append(ord(i))
+            if separated[-1] == 10:
+                separated.pop()
+                if separated[-1] == 13:
+                    separated.pop()    
+            #result = binascii.b2a_qp(results)
+            #result = "".join(result.splitlines())
+            #separated = result.split('=')
+            final_results = []
+            for i in separated:
+                #if (len(i) == 0) or i.startswith("$"):
+                #    continue
+                i = (int(i)/2)*-1#convert to dBm
+                final_results.append(i) 
+            #print 'Value list is %s long' % len(final_results)  
+            if len(final_results) != 112:
+                final_results = None
+        else:
+            #try again it'll probably work
+            final_results =  None
         return final_results
             
     def compile_dictionary(self, values):
@@ -254,6 +270,15 @@ class RFExplorer:
         else:    
             raise ValueError("RFE didn't take the sweep_settings")
         final_result = self.collect_data()
+        now = time.time()
+        if final_result == None:
+        # We are going to try this again, for a few more times more times...
+            while time.time() < now + 30:
+                final_result = self.collect_data()
+                if final_result != None:
+                    break
+            if final_result == None:
+                raise ValueError('This set of frequencies is not 112 long.')
         first_dict = self.compile_dictionary(final_result)
         return first_dict
         
