@@ -16,12 +16,10 @@ SHUTDOWN = '#'+chr(0x04)+'CS'
 #Not sure if this is the best way of doing this.  We want the name to match SiLabs Driver
 #to pass to the RFE serial init
 def list_serial_ports():
-    """
-    .. function:: list_serial_ports()
+    """This just lists the serial ports on a computer. It doesn't actually verify that a port is the RFExplorer
+    :returns:  list of ports
+    :raises: None
 
-   Lists all of an OS's serial ports
-
-   :rtype: list of strings
    """
     # Windows
     if os.name == 'nt':
@@ -40,14 +38,12 @@ def list_serial_ports():
         return [port[0] for port in list_ports.comports()]     
         
 class RFExplorer:
-    """Instantiates an RFExplorer instance.
-
-        Must take an integer of the COM port list, not the index.
+    """Instantiates an RFExplorer instance. Must take an integer of the COM port list, not the index.
         For example if the COM port that the RFE is attached to is displayed by
         Windows as COM4, then provide the number 4 to the RFExplorer instance.
 
         Args:
-            port: Integer of the COM port that the RF Explorer is attached to
+            port: Integer of the COM port that the RF Explorer is attached to from the output of :func:`list_serial_ports`
 
         Returns:
             ser: A serial.Serial object.
@@ -55,6 +51,7 @@ class RFExplorer:
 
         Raises:
             SerialException: could not open port [COMport]: [Error 2] The system cannot find the file specified.
+
     """
     def __init__(self,port):    
         self.port = port
@@ -73,6 +70,7 @@ class RFExplorer:
             device_info: a list of the device's info
         Raises:
             ValueError:"RFE returned a value that was not '4L'"
+
         """
         try:
             s = self.ser.write(GO)
@@ -111,6 +109,7 @@ class RFExplorer:
             freq_list: a list of the 112 frequencies that are being swept
         Raises:
             NameError: Means that self.ser.readline() is not providing a C2F 
+
         """        
         #Now that we have the first info line, the next line should be the Current_Config
         request_config = self.ser.readline().split(':')
@@ -151,6 +150,7 @@ class RFExplorer:
             SerialException:None
             Used to break a while loop if all has gone to hell
             ValueError: If the conversion of datapoints fails for a specific 
+
         """
         first = self.ser.readline()
         if not first.startswith('$S'):
@@ -222,6 +222,7 @@ class RFExplorer:
             ValueError: Incorrect Value submitted
             ValueError: Length of Value is not correct
             ValueError: Write to RFE Failed
+
         """
         if int(start_freq) < 240000 or int(start_freq) > 959888:
             raise ValueError("start_freq not in bounds")
@@ -258,6 +259,7 @@ class RFExplorer:
                 stop_sweep: length of time in seconds for the sweep repeat and compare
             Returns:
                 value_dictionary to compare with other sweep data
+
         """
         self.stop_please()
         top = '-010'
@@ -290,6 +292,7 @@ class RFExplorer:
                 stop: length of time in seconds for the sweep repeat and compare
             Returns:
                 value_dictionary to compare with other sweep data
+
         """
         self.stop_please()
         top = '-010'
