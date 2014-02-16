@@ -16,13 +16,12 @@ import sys
 import os
 
 #os.path.abspath('../../RFExplorer.py')
-sys.path.insert(0,"C:\\Users\\Matt\\django_projects\\rf-explorer-python-api")
+#sys.path.insert(0,"C:\\Users\\Matt\\django_projects\\rf-explorer-python-api")
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
-
+sys.path.append('../../rf-explorer-python-api')
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
