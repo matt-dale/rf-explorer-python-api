@@ -14,6 +14,19 @@ Requirements
 * `Pyserial` [1]_ for serial port access with Python
 * `Silicon Labs USB Serial Driver` [2]_ driver for the RFExplorer
 
+Installation and use
+====================
+Once the requirements are installed, you can begin to write your own scripts using the RFExplorer Class.
+
+The base RFExplorer() class takes one argument.  This argument is the COM port number for example if the RFE is registered as COM5 on the computer, then you would instantiate the class like this:
+```
+#!python
+
+RFE = RFExplorer(5)
+```
+Then you will have access to the various methods to control the RFExplorer.
+
+
 .. [0] http://www.python.org/download/releases/2.7/
 .. [1] https://pypi.python.org/pypi/pyserial
 .. [2] http://micro.arocholl.com/download/RFExplorer_USB_Driver.zip
