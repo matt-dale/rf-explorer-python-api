@@ -26,6 +26,8 @@ The base RFExplorer() class takes one argument.  This argument is the COM port n
 
 Then you will have access to the various methods to control the RFExplorer.
 
+See exampleScript.py for a simple example.
+
 
 .. [0] http://www.python.org/download/releases/2.7/
 .. [1] https://pypi.python.org/pypi/pyserial
