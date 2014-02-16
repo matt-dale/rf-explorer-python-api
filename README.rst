@@ -2,7 +2,7 @@
 
 Intro to the RFExplorer Python API
 ==================================
-The purpose of this API is to provide the structure to script the RFExplorer to gather data for a specific set of frequency ranges.  
+The purpose of this API is to provide the structure to script the RFExplorer(http://rfexplorer.com/models/) to gather data for a specific set of frequency ranges.  
 
 In practice, the RFExplorer tool itself can obtain data in chunks that will fit on its window. If you would want to output this data to a file for viewing in an RF coordination program such as IAS, the user would have to manually change the device, run the sweep, save the data for that chunk, then move on to the next chunk. After all the chunks were collected, the user would have to concatenate all the output files into a single CSV for import.  
 
