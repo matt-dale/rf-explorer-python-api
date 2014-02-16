@@ -19,11 +19,10 @@ Installation and use
 Once the requirements are installed, you can begin to write your own scripts using the RFExplorer Class.
 
 The base RFExplorer() class takes one argument.  This argument is the COM port number for example if the RFE is registered as COM5 on the computer, then you would instantiate the class like this:
-```
-#!python
+.. code-block:: python
 
-RFE = RFExplorer(5)
-```
+	RFE = RFExplorer(5)
+
 Then you will have access to the various methods to control the RFExplorer.
 
 
