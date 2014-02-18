@@ -21,6 +21,10 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
+paths = ['..', '../..', '../..']
+for path in paths:
+    sys.append(os.path.abspath(path))
+
 sys.path.append('../../../rf-explorer-python-api')
 # -- General configuration ------------------------------------------------
 
