@@ -23,9 +23,9 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 paths = ['..', '../..', '../..']
 for path in paths:
-    sys.append(os.path.abspath(path))
+    sys.path.append(os.path.abspath(path))
 
-sys.path.append('../../../rf-explorer-python-api')
+#sys.path.append('../../../rf-explorer-python-api')
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
