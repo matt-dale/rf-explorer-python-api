@@ -1,5 +1,7 @@
 .. RFExplorer Python API documentation intro
 
+Please see the docs here: http://rf-explorer-python-api.readthedocs.org/en/latest/
+
 Intro to the RFExplorer Python API
 ==================================
 The purpose of this API is to provide the structure to script the RFExplorer(http://rfexplorer.com/models/) to gather data for a specific set of frequency ranges.  
