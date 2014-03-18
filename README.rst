@@ -18,14 +18,17 @@ Requirements
 
 Installation and use
 ====================
-Once the requirements are installed, you can begin to write your own scripts using the RFExplorer Class.
+Once the requirements are installed, you can begin to write your own scripts using the RFExplorer Class. Confirm that the RFExplorer's baudrate is set to 500kbps.
 
 The base RFExplorer() class takes one argument.  This argument is the COM port string for Mac and Linux and Com Port Number for Windows. 
 Windows example:
 If the RFE is registered as COM5 on the computer, then you would instantiate the class like this:
+
 ```
 	RFE = RFExplorer(5)
 ```
+
+A Mac should automatically find the Silabs driver, but it needs some testing on Linux.
 
 Then you will have access to the various methods to control the RFExplorer.
 

@@ -72,7 +72,8 @@ class RFExplorer:
         self.port = port
         #ser = serial.Serial(int(port-1))
         ser = serial.Serial(port)
-        ser.baudrate = 2400
+        #ser.baudrate = 2400
+        ser.baudrate = 500000
         ser.timeout = 5
         self.ser = ser
         self.freq_list = None
