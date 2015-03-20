@@ -582,3 +582,31 @@ def RFESweep(show,venue,city,queue,RFE):
         return t
     except Exception as e:
         return 'Oh No! sweep failed---- %s' % e  
+
+def RF_data():
+    if os.name != 'nt':
+        port = getRFExplorerPort()
+    else:
+        x = list_serial_ports()
+        for i in x:
+            print "Here's a list of your serial ports."
+            print x
+            print "Do you know which number the RFE is?"
+            print """
+                    If you don't know...remember the above list of ports, 
+                    then unplug the RFE and run the program again to determine which number went away from the above list.
+                    This is the RFE's port! Remember this port number for the next step.
+                  """
+            num = raw_input("Which serial port number is the RFE? Only enter the number, not the word 'COM'.>>> ")
+            port = int(num)-1
+           #args are getting submitted as strings? this should give it an int...
+    RFE = RFExplorer(port)
+    show = raw_input("Enter the name of your show>>> ")
+    city = raw_input("Enter the name of the city you are in>>> ")
+    venue = raw_input("Enter the name of the venue you are in>>> ")
+    RFExplorerSweepThenEmail(show,city,venue,RFE,None)
+    return True
+    
+    
+if __name__ == '__main__':
+    RF_data()
