@@ -14,9 +14,9 @@ Contents:
    intro
    example
 
-.. automodule:: RFExplorer
+.. automodule:: RFExplorerV2
  
-.. autoclass:: RFExplorer
+.. autoclass:: RFExplorerV2
     :members:
 
 
