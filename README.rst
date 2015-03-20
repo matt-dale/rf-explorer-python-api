@@ -10,6 +10,8 @@ In practice, the RFExplorer tool itself can obtain data in chunks that will fit 
 
 With this API, you can create some preset options for the frequency ranges that you are interested in.  The code manipulates the RFExplorer, gathers the outputted data and collects it into a single CSV file.  
 
+If you are interested in graphical output and other methods of data collection, please visit `RFExplorer's website.` [4]_ 
+
 Requirements
 ============
 * `Python 2.7` [0]_ of course!
@@ -21,21 +23,20 @@ Installation and use
 Once the requirements are installed, you can begin to write your own scripts using the RFExplorer Class. Confirm that the RFExplorer's baudrate is set to 500kbps.
 
 The base RFExplorer() class takes one argument.  This argument is the COM port string for Mac and Linux and Com Port Number for Windows. 
-Windows example:
-If the RFE is registered as COM5 on the computer, then you would instantiate the class like this:
-
-```
-	RFE = RFExplorer(5)
-```
 
 A Mac should automatically find the Silabs driver, but it needs some testing on Linux.
 
 Then you will have access to the various methods to control the RFExplorer.
 
-See exampleScript.py [3]_ for a simple example.
+There are two preset sweeps in the module to get the base information for an entertainment industry sweep.
+
+If you call the module from the commandline, you will get the basic "DTVSweep" which will save the sweep data to the current working directory.
+This is a nice example of the scripting possibilities with the RFExplorer.  
+
+
 
 
 .. [0] http://www.python.org/download/releases/2.7/
 .. [1] https://pypi.python.org/pypi/pyserial
 .. [2] http://micro.arocholl.com/download/RFExplorer_USB_Driver.zip
-.. [3] https://github.com/matt-dale/rf-explorer-python-api/blob/master/exampleScript.py
+.. [4] http://www.rfexplorer.com
