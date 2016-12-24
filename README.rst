@@ -1,6 +1,8 @@
 .. RFExplorer Python API documentation intro
 
-Please see the docs here: http://rf-explorer-python-api.readthedocs.org/en/latest/
+THIS PACKAGE IS OUTDATED. 
+PLEASE USE THIS:
+https://github.com/RFExplorer/RFExplorer-for-Python/wiki
 
 Intro to the RFExplorer Python API
 ==================================
